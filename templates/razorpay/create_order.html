@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceed with Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Enter the amount to pay (INR)</h2>
+
+    {% if not order_id %}
+        <!-- Form to input amount, only if order is not yet created -->
+        <form action="{% url 'create_order' %}" method="POST">
+            {% csrf_token %}
+            <label for="amount">Amount (INR): </label>
+            <input type="number" id="amount" name="amount" value="{{ cost }}" required min="1" step="0.01" readonly>
+            <br><br>
+            <input type="submit" value="Proceed to Payment">
+        </form>
+    {% else %}
+        <!-- Display order details and payment button once the order is created -->
+        <p>Total amount: ₹{{ amount|floatformat:2 }}</p>
+
+        <!-- Pay Now Button -->
+        <button id="pay-now"
+                data-order-id="{{ order_id }}" 
+                data-amount="{{ amount }}" 
+                data-razorpay-key="{{ razorpay_key }}"
+                data-cost="{{ cost }}">
+            Pay Now
+        </button>
+
+        <div style="color:black;">
+            {% for message in messages %}
+                <p style="color: black;">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <script>
+        // Handle the Razorpay payment on button click
+        document.getElementById('pay-now')?.addEventListener('click', function (e) {
+            var options = {
+                "key": document.getElementById('pay-now').dataset.razorpayKey, // Razorpay API Key
+                "amount": document.getElementById('pay-now').dataset.amount * 100, // Amount in paise
+                "currency": "INR",
+                "name": "Your Company Name",
+                "description": "Payment for your order",
+                "order_id": document.getElementById('pay-now').dataset.orderId, // Order ID created by Razorpay
+                "handler": function (response) {
+                    // Send the payment details to your server to verify
+                    var razorpay_order_id = response.razorpay_order_id;
+                    var razorpay_payment_id = response.razorpay_payment_id;
+                    var razorpay_signature = response.razorpay_signature;
+                    var amount = document.getElementById('pay-now').dataset.amount;  // Get the amount from the button's data
+
+                    // Use AJAX or a form submission to send payment info to verify_payment view
+                    var form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = "{% url 'verify_payment' %}";
+
+                    // Hidden inputs for Razorpay payment info
+                    var hiddenField1 = document.createElement("input");
+                    hiddenField1.type = "hidden";
+                    hiddenField1.name = "razorpay_order_id";
+                    hiddenField1.value = razorpay_order_id;
+                    form.appendChild(hiddenField1);
+
+                    var hiddenField2 = document.createElement("input");
+                    hiddenField2.type = "hidden";
+                    hiddenField2.name = "razorpay_payment_id";
+                    hiddenField2.value = razorpay_payment_id;
+                    form.appendChild(hiddenField2);
+
+                    var hiddenField3 = document.createElement("input");
+                    hiddenField3.type = "hidden";
+                    hiddenField3.name = "razorpay_signature";
+                    hiddenField3.value = razorpay_signature;
+                    form.appendChild(hiddenField3);
+
+                    // Hidden input for amount
+                    var hiddenField4 = document.createElement("input");
+                    hiddenField4.type = "hidden";
+                    hiddenField4.name = "amount"; // Pass the amount here
+                    hiddenField4.value = amount; // Get the amount from button's data
+                    form.appendChild(hiddenField4);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                },
+                "prefill": {
+                    "name": "John Doe",
+                    "email": "john.doe@example.com",
+                    "contact": "9876543210"
+                }
+            };
+
+            // Open the Razorpay payment gateway
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

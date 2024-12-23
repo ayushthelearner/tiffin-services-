@@ -132,3 +132,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PAYPAL_TEST = True
+
+
+RAZORPAY_API_KEY = 'rzp_test_pwerpjgHPrLbHH'
+RAZORPAY_API_SECRET = 'F7qhtENstEqVpPje44sJt3j4'

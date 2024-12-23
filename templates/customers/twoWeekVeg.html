@@ -56,9 +56,8 @@
                     {% csrf_token %}
                     {{form.as_p}}
                     
-                    <input type="submit" value="Get vendor" class="btn btn-success d-flex justify-content-center">
+                    <input type="submit" value="Get vendor and pay {{ cost }}" class="btn btn-success d-flex justify-content-center">
 
-                    
                     
                 </form>
 
@@ -68,6 +67,7 @@
                
 
                 
+                
 
                 
 
@@ -75,9 +75,13 @@
             </div>
 
            
-                <a href="{% url 'payment_form' %}">
-                     <button class= " btn btn-success d-flex justify-content-center" style="margin:5px;"> pay {{ cost }}<button>
-                </a>
+               
+
+
+            {% comment %} <a href="{% url 'create_order' %}">
+                <button class="btn btn-success d-flex justify-content-center" style="margin:5px;">pay {{ cost }}</button>
+                
+            </a> {% endcomment %}
            
             
                 

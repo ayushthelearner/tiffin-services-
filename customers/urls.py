@@ -22,5 +22,6 @@ urlpatterns = [
    path("ThreeMonthVeg/",views.ThreeMonthVeg, name="ThreeMonthVeg"),
    path("ThreeMonthVegNonveg/",views.ThreeMonthVegNonveg, name="ThreeMonthVegNonveg"),
    
+   
 
 ]

@@ -1,0 +1,128 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+
+
+
+
+{% block navbar %}
+{% if request.user.is_authenticated %}
+<li class="nav-item active">
+    <a href="#" class="nav-link" style="color: blue; font-size: 1.3rem;" >Hello , {{ request.user }}!</a>
+</li>
+<li class="nav-item">
+    <a href="{% url 'logout' %}" class="nav-link" target="_blank" style="color: black; font-size: 1.3rem;hover:black;" >Logout</a>
+</li>
+{% else %}
+<li class="nav-item">
+    <a href="{% url 'admin:index' %}" class="nav-link" target="_blank">Login</a>
+</li>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+<div style="background-image: url('{% static 'images/cart.jpg' %}'); background-size: cover; margin: 0; padding: 0; height: 100vh;">
+
+
+
+
+    <h1 style="text-align: center;margin-top:10px;">Welcome to your cart</h1>
+    <p style="text-align: center;color:white;"><b>Thank you for joining Tiffin Treats Tiffin services. Your payment and selected plans are:</b></p>
+    
+    <div style="text-align: center; margin: 80px;color:white;">
+        <h2 style="color:black;">Order Details</h2>
+        <!-- Display the amount from the order -->
+         
+        {% if order.amount  == 499 %}
+        <p><strong>Selected Plan :</strong>        &nbsp; &nbsp; <b>Single Thali</b></p>
+        {% elif order.amount == 799 %}
+        <p><strong>Selected Plan :</strong>   &nbsp; &nbsp; One month vegetarian plan</p>
+        {% elif order.amount == 999 %}
+        <p><strong>Selected Plan :</strong>   &nbsp; &nbsp; One month Vegetarian + Non Vegetarian Plan</p>
+        {% elif order.amount == 2499 %}
+        <p><strong>Selected Plan :</strong>  &nbsp; &nbsp; 3 Month Vegetarian Plan</p>
+        {% elif order.amount == 2699 %}
+        <p><strong>Selected Plan :</strong>   &nbsp; &nbsp;3 Months Vegetarian + Non - Vegetarian Plan</p>
+        {% else %}
+        <p><strong>Selected Plan :</strong>  &nbsp; &nbsp; No plan selected</p>
+        {% endif %}
+    
+        <p><strong>Selected Plan Amount:</strong> <b>&nbsp; &nbsp;₹{{ order.amount|floatformat:2 }}</b></p><br><br>
+        <h5 style="color:black;"><b>Your payment was successfully processed. Below are the details of your order:</b></p></h5>
+    </div>
+    
+    
+    
+    <div style="text-align: center; margin: 80px;font-weight: bold;color:white;">
+        <table style="margin-left:450px;">
+            <tr>
+                <th>Order ID:           </th>
+                <td>{{ order.order_id }}</td>
+            </tr>
+            <tr>
+                <th>Amount Paid (INR):</th>
+                <td>₹{{ order.amount|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <th>Status:</th>
+                <td>{{ order.status }}</td>
+            </tr>
+            <tr>
+                <th>Transaction ID:</th>
+                <td>{{ order.transaction_id }}</td>
+            </tr>
+        </table>
+        
+        <p style="margin-top:50px;color:white;background-color:blue;"><b>We hope you enjoy our services! If you have any questions or issues, feel free to contact us.</b></p>
+    
+    
+        {% for message in messages %}
+                <p style="color: whitesmoke;">{{ message }}</p>
+        {% endfor %}
+    
+    </div>
+    
+    
+    <div style="height:120px;background-color:grey;margin:0;">
+        <div style="text-align:center;padding:10px;font-size:20px;">
+            <b>Tiffin treats tiffin services</b>
+        </div>
+        <div style="text-align:center;padding:0px;font-size:15px;">
+            <b>Prabhapuram colony Robertsganj Sonbhadra</b>
+        </div>
+        <div style="text-align:center;padding:0px;font-size:15px;">
+            <b>contact-us : 9795492571</b><br>
+            <i class="fa-brands fa-facebook"></i>
+            &nbsp;
+            <i class="fa-brands fa-whatsapp"></i>
+            &nbsp;
+            <i class="fa-brands fa-square-instagram"></i>
+        </div>
+    
+    
+    </div>
+    
+
+
+
+
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+    
+

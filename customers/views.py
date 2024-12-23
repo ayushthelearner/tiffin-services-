@@ -1,5 +1,5 @@
 from django.http import request
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,reverse
 from .models import Customer
 from .forms import CustomerForm
 from django.contrib import messages
@@ -48,6 +48,12 @@ def allotPlans(request, planType, cost):
             vendor_phone = allot.Vendor_Phone
             messages.success(request, f"{vendor_name} is your delivery executive. Contact details: {vendor_phone}.")
             # indexVendor(prime_key)
+            if cost != "Free!":
+            #   return redirect('create_order')
+             create_order_url = reverse('create_order')  # Get the base URL for 'create_order'
+             create_order_url_with_cost = f"{create_order_url}?cost={cost}"  # Append the 'cost' parameter
+            
+             return redirect(create_order_url_with_cost) 
 
           
             
@@ -117,3 +123,5 @@ def FreePage(request):
 
 # print(obj2.Full_Name)
 # newObj = Customer.objects.create(Full_Name = "Arav Yadav", )
+
+

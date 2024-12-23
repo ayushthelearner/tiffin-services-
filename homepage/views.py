@@ -9,6 +9,7 @@ from customers import views
 from .forms import UserCreateForm
 from customers.models import *
 # from customers.forms import  CustomerForm
+from customers.models import order
 
 
 
@@ -38,8 +39,13 @@ def index(request):
 
 @login_required(login_url='login')
 def loggedIn(request):
+    payment_successful = request.GET.get('payment_successful', 'False') == 'True'
     
-    return render(request,"homepage/loggedin.html")
+    context = {
+        'payment_successful': payment_successful
+    }
+    
+    return render(request,"homepage/loggedin.html",context)
 
 @login_required(login_url='login')
 def logoutUser(request):
@@ -113,3 +119,19 @@ def registerUser(request):
     return render(request, 'homepage/index.html', context)
 
     
+    
+def view_cart(request):
+    # user = User.objects.filter(username="himanshu").first()
+    user = request.user
+
+    
+    user_order = order.objects.filter(user=user).last()
+    
+    print(user_order)
+    
+    if not user_order:
+        return render(request, 'cart/selected_plan.html', {'error': "No payment found."})
+    
+    
+
+    return render(request, 'cart/selected_plan.html', {'order': user_order})
